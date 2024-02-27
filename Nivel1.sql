@@ -49,9 +49,69 @@ use universidad;
 
 //LEFT JOIN y RIGHT JOIN.
 
-/*1*/ 
-/*2*/
-/*3*/
-/*4*/
-/*5*/
-/*6*/
+/*1*/ SELECT d.nombre AS 'Nombre del Departamento', 
+       p.apellido1 AS 'Primer Apellido', 
+       p.apellido2 AS 'Segundo Apellido', 
+       p.nombre AS 'Nombre del Profesor/a'
+    FROM profesor pr
+    RIGHT JOIN persona p ON pr.id_profesor = p.id
+    LEFT JOIN departamento d ON pr.id_departamento = d.id
+    ORDER BY d.nombre ASC, p.apellido1 ASC, p.apellido2 ASC, p.nombre ASC;
+/*2*/ SELECT persona.apellido1, persona.apellido2, persona.nombre
+    FROM persona
+    LEFT JOIN profesor  ON persona.id = profesor.id_profesor
+    WHERE profesor.id_profesor IS NULL AND persona.tipo = 'profesor';
+
+/*3*/ SELECT departamento.nombre
+    FROM departamento 
+    LEFT JOIN profesor  ON departamento.id = profesor.id_departamento
+    WHERE profesor.id_departamento IS NULL;
+/*4*/ SELECT persona.apellido1, persona.apellido2, persona.nombre
+FROM persona 
+    LEFT JOIN asignatura ON persona.id = asignatura.id_profesor
+    WHERE asignatura.id_profesor IS NULL AND persona.tipo = 'profesor';
+/*5*/ SELECT asignatura.nombre
+    FROM asignatura 
+    LEFT JOIN persona ON asignatura.id_profesor = persona.id
+    WHERE persona.id IS NULL;
+/*6*/ SELECT departamento.nombre
+    FROM departamento 
+    LEFT JOIN profesor ON departamento.id = profesor.id_departamento
+    LEFT JOIN asignatura ON profesor.id_profesor = asignatura.id_profesor
+    LEFT JOIN alumno_se_matricula_asignatura ON asignatura.id = alumno_se_matricula_asignatura.id_asignatura
+    WHERE alumno_se_matricula_asignatura.id_asignatura IS NULL;
+
+//Consultes resum:
+
+/*1*/ SELECT COUNT(*) FROM persona WHERE tipo = 'alumno';
+/*2*/ SELECT COUNT(*) FROM persona WHERE YEAR(fecha_nacimiento) = 1999 AND tipo = 'alumno';
+/*3*/ SELECT departamento.nombre, COUNT(profesor.id_profesor) AS 'Número de profesores'
+    FROM departamento 
+    LEFT JOIN profesor ON departamento.id = profesor.id_departamento
+    GROUP BY departamento.nombre
+    ORDER BY COUNT(profesor.id_profesor) DESC;
+/*4*/ SELECT departamento.nombre, COUNT(profesor.id_profesor)
+    FROM departamento
+    LEFT JOIN profesor ON departamento.id = profesor.id_departamento
+    GROUP BY departamento.nombre;
+/*5*/ SELECT grado.nombre, COUNT(asignatura.id)
+    FROM grado
+    LEFT JOIN asignatura ON grado.id = asignatura.id_grado
+    GROUP BY grado.nombre
+    ORDER BY COUNT(asignatura.id) DESC;
+/*6*/ SELECT grado.nombre, COUNT(asignatura.id)
+    FROM grado
+    LEFT JOIN asignatura ON grado.id = asignatura.id_grado
+    GROUP BY grado.nombre
+    HAVING COUNT(asignatura.id) > 40;   
+/*7*/ SELECT grado.nombre AS 'Grado', asignatura.tipo AS 'Tipo de asignatura', SUM(asignatura.creditos) 
+    AS 'Suma de     créditos'
+    FROM grado 
+    LEFT JOIN asignatura ON grado.id = asignatura.id_grado
+    GROUP BY grado.nombre, asignatura.tipo;
+
+/*8*/ SELECT anyo_inicio AS 'Año de inicio', COUNT(DISTINCT id_alumno) AS 'Número de alumnos matriculados'
+    FROM curso_escolar
+    JOIN alumno_se_matricula_asignatura ON curso_escolar.id = alumno_se_matricula_asignatura.id_curso_escolar
+    GROUP BY anyo_inicio;
+
