@@ -49,14 +49,14 @@ use universidad;
 
 //LEFT JOIN y RIGHT JOIN.
 
-/*1*/ SELECT d.nombre AS 'Nombre del Departamento', 
-       p.apellido1 AS 'Primer Apellido', 
-       p.apellido2 AS 'Segundo Apellido', 
-       p.nombre AS 'Nombre del Profesor/a'
-    FROM profesor pr
-    RIGHT JOIN persona p ON pr.id_profesor = p.id
-    LEFT JOIN departamento d ON pr.id_departamento = d.id
-    ORDER BY d.nombre ASC, p.apellido1 ASC, p.apellido2 ASC, p.nombre ASC;
+/*1*/ SELECT departamento.nombre AS 'Nombre del Departamento', 
+       persona.apellido1 AS 'Primer Apellido', 
+       persona.apellido2 AS 'Segundo Apellido', 
+       persona.nombre AS 'Nombre del Profesor/a'
+    FROM profesor 
+    RIGHT JOIN persona  ON profesor.id_profesor = persona.id
+    LEFT JOIN departamento ON profesor.id_departamento = departamento.id
+    ORDER BY departamento.nombre ASC, persona.apellido1 ASC, persona.apellido2 ASC, persona.nombre ASC;
 /*2*/ SELECT persona.apellido1, persona.apellido2, persona.nombre
     FROM persona
     LEFT JOIN profesor  ON persona.id = profesor.id_profesor
